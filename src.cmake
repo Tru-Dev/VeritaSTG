@@ -34,11 +34,6 @@ set(VERITA_INCLUDE
     ${VERITA_FRAMEWORKS_DIR}/audio
 
     ${VERITA_FRAMEWORKS_DIR}/glad/include
-    # ${VERITA_FRAMEWORKS_DIR}/glfw/include
-
-    # ${VERITA_FRAMEWORKS_DIR}/dll/include
-    
-    # ${VERITA_FRAMEWORKS_DIR}/fmt/include
 
     ${Boost_INCLUDE_DIR}
     ${FMT_INCLUDE_DIR}
@@ -46,5 +41,4 @@ set(VERITA_INCLUDE
 
 # VeritaSTG Include Directories ===============================================
     ${VERITA_SOURCE_DIR}/include/
-    # ${VERITA_SOURCE_DIR}/luabind/include
 )

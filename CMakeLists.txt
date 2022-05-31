@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -6,6 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(APP_NAME VeritaSTG)
 
 project(${APP_NAME})
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(WINDOWS TRUE)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(LINUX TRUE)
+else()
+    message(FATAL_ERROR "Only Windows and Linux are supported as of now.")
+    return()
+endif()
 
 find_package(OpenGL REQUIRED)
 
@@ -34,23 +43,10 @@ set_target_properties(
 
 if(LINUX)
     add_executable(${APP_NAME}-bin ${VERITA_SOURCE_DIR}/runtime/linux/main.cpp)
-    # target_include_directories(${APP_NAME}-bin PRIVATE ${VERITA_INCLUDE})
     target_link_libraries(${APP_NAME}-bin PRIVATE ${APP_NAME}-lib)
     set_target_properties(${APP_NAME}-bin PROPERTIES OUTPUT_NAME ${APP_NAME})
-elseif(WIN32)
+elseif(WINDOWS)
     set(WIN32_RUNTIME_DIR ${VERITA_SOURCE_DIR}/runtime/win32)
-    # add_executable(${APP_NAME}-bin-console
-    #     ${WIN32_RUNTIME_DIR}/main.cpp
-    #     ${WIN32_RUNTIME_DIR}/resource.h
-    #     ${WIN32_RUNTIME_DIR}/VeritaSTG.rc
-    # )
-    # target_include_directories(${APP_NAME}-bin-console PRIVATE ${VERITA_INCLUDE})
-    # target_link_libraries(${APP_NAME}-bin-console PRIVATE ${APP_NAME}-lib)
-    # set_target_properties(
-    #     ${APP_NAME}-bin-console PROPERTIES
-    #     OUTPUT_NAME ${APP_NAME}.console
-    #     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
-    # )
     set(CMAKE_EXE_LINKER_FLAGS
         "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
     )
@@ -59,7 +55,6 @@ elseif(WIN32)
         ${WIN32_RUNTIME_DIR}/resource.h
         ${WIN32_RUNTIME_DIR}/VeritaSTG.rc
     )
-    # target_include_directories(${APP_NAME}-bin PRIVATE ${VERITA_INCLUDE})
     target_link_libraries(${APP_NAME}-bin PRIVATE ${APP_NAME}-lib)
     set_target_properties(${APP_NAME}-bin PROPERTIES
         OUTPUT_NAME ${APP_NAME}
