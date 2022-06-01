@@ -16,6 +16,9 @@ cd VeritaSTG
 # and not build VeritaSTG.
 ```
 
+WIP Note: you will need an ogg file, renamed to `test.ogg`,
+to properly test the current version.
+
 ## Features/Roadmap Overview
 - [ ] Audio
   - [ ] Music playback
