@@ -8,6 +8,7 @@
 #include <VeritaSTG/ResourcePool.hpp>
 
 #include <string>
+#include <utility>
 
 #include <miniaudio.h>
 
@@ -24,10 +25,15 @@ unsigned int VeritaSTG::Fnv1Hash(std::string id) {
 }
 
 void VeritaSTG::ResourcePool::AddMusic(std::string id, std::string path) {
-    LazyResource<ma_sound> music(path);
-    MusicPool.emplace(VeritaSTG::Fnv1Hash(id), music);
+    MusicPool.emplace(std::piecewise_construct,
+        std::forward_as_tuple(VeritaSTG::Fnv1Hash(id)),
+        std::forward_as_tuple(new VeritaSTG::LazyResourceReference<ma_sound>(path))
+    );
 }
 
-VeritaSTG::LazyResource<ma_sound>* VeritaSTG::ResourcePool::FindMusic(std::string id) {
-    return &MusicPool[VeritaSTG::Fnv1Hash(id)];
+VeritaSTG::LazyResourceReference<ma_sound>* VeritaSTG::ResourcePool::FindMusic(std::string id) {
+    int hash = VeritaSTG::Fnv1Hash(id);
+    if (MusicPool.contains(hash))
+        return MusicPool[hash];
+    return nullptr;
 }

@@ -40,15 +40,15 @@ namespace VeritaSTG {
             initialized = false;
         }
 
-        ResourceResult<ma_sound> LoadMusic(std::string path) {
-            ma_sound bgm;
+        ResourceResult<ma_sound*> LoadMusic(std::string path) {
+            ma_sound* bgm = new ma_sound;
             ma_result result = ma_sound_init_from_file(
                 &miniaudio_inst,
                 path.c_str(),
                 MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_NO_SPATIALIZATION,
                 NULL,
                 NULL,
-                &bgm
+                bgm
             );
             return {
                 // resource =

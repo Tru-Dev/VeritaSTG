@@ -25,13 +25,12 @@ namespace VeritaSTG {
         template <typename V>
         using TypePool = std::unordered_map<unsigned int, V>;
 
-        TypePool<LazyResource<ma_sound>> MusicPool;
+        TypePool<LazyResourceReference<ma_sound>*> MusicPool;
         // More to come...
 
     public:
         void AddMusic(std::string id, std::string path);
 
-        LazyResource<ma_sound>* FindMusic(std::string id);
+        LazyResourceReference<ma_sound>* FindMusic(std::string id);
     };
 }
-
