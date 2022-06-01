@@ -52,7 +52,7 @@ BEGIN
         BLOCK "040004b0"
         BEGIN
             VALUE "CompanyName", "VeritaSTG"
-            VALUE "FileDescription", "Powerful Shmup Engine"
+            VALUE "FileDescription", "VeritaSTG"
             VALUE "FileVersion", "0.1.0.0"
             VALUE "InternalName", "VeritaSTG.exe"
             VALUE "LegalCopyright", "Copyright (C) TruDev 2022"
