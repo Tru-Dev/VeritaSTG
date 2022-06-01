@@ -8,10 +8,13 @@
 
 #pragma once
 
-#include "miniaudio.h"
-#include "fmt/core.h"
+#include <miniaudio.h>
+#include <filesystem>
 
-#include "Log.hpp"
+#include <fmt/core.h>
+
+#include "log.hpp"
+#include "engine_panic.hpp"
 #include "ResourceEngineWrapper.hpp"
 #include "ResourcePool.hpp"
 
@@ -55,8 +58,36 @@ namespace VeritaSTG {
         }
 
         inline void LoadMusic(std::string id, std::string path) { resPool->AddMusic(id, path); }
-        void PlayMusic(std::string id);
-        void StopMusic(std::string id);
+        void PlayMusic(std::string id) {
+            auto bgm = resPool->FindMusic(id);
+            if (!bgm->Initialized()) {
+                std::string bgmPath = bgm->GetPath();
+                if (!std::filesystem::exists(bgmPath)) {
+                    VeritaSTG::EnginePanic(fmt::format(
+                        "Error upon loading music \"{}\": path \"{}\" does not exist",
+                        id, bgmPath
+                    ));
+                }
+                auto resres = resEngines->LoadMusic(bgmPath);
+                if (resres.result != 0) {
+                    VeritaSTG::EnginePanic(
+                        fmt::format("Error upon loading music \"{}\": {}", id, resres.result)
+                    );
+                    return;
+                }
+                bgm->Initialize(resres.resource);
+            }
+
+            ma_sound_start(bgm->Unwrap());
+        }
+        void StopMusic(std::string id) {
+            auto bgm = resPool->FindMusic(id);
+            if (!bgm->Initialized()) return;
+            ma_sound* inner_bgm = bgm->Unwrap();
+            if (!ma_sound_is_playing(inner_bgm)) return;
+            ma_sound_stop(inner_bgm);
+            ma_sound_seek_to_pcm_frame(inner_bgm, 0);
+        }
         inline E GetEventData(void) { return eventData; }
     };
 }
