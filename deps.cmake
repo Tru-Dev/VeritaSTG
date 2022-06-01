@@ -14,9 +14,12 @@ find_package(Boost COMPONENTS iostreams REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 
+add_subdirectory(${VERITA_FRAMEWORKS_DIR}/Boxer)
+
 set(VERITA_LIBRARIES
-    fmt::fmt
     Boost::boost
     Boost::iostreams
+    Boxer
+    fmt::fmt
     glfw
 )

@@ -20,11 +20,11 @@ find_package(OpenGL REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIRS})
 
-include(deps.cmake)
-
 set(VERITA_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(VERITA_INCLUDE_DIR ${VERITA_SOURCE_DIR}/include)
 set(VERITA_FRAMEWORKS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/frameworks)
+
+include(deps.cmake)
 
 include(src.cmake)
 

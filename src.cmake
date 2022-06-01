@@ -1,8 +1,7 @@
 
 set(VERITA_SOURCE
     ${VERITA_SOURCE_DIR}/Game.cpp
-    ${VERITA_SOURCE_DIR}/GlobalEventContext.cpp
-    ${VERITA_SOURCE_DIR}/Log.cpp
+    ${VERITA_SOURCE_DIR}/log.cpp
     ${VERITA_SOURCE_DIR}/ResourcePool.cpp
 
     # ${VERITA_SOURCE_DIR}/entrypoint.cpp
@@ -12,12 +11,12 @@ set(VERITA_HEADERS
     ${VERITA_SOURCE_DIR}/include/VeritaSTG/CallbackRegistry.hpp
     ${VERITA_SOURCE_DIR}/include/VeritaSTG/Game.hpp
     ${VERITA_SOURCE_DIR}/include/VeritaSTG/GlobalEventContext.hpp
-    ${VERITA_SOURCE_DIR}/include/VeritaSTG/Log.hpp
     ${VERITA_SOURCE_DIR}/include/VeritaSTG/Resource.hpp
     ${VERITA_SOURCE_DIR}/include/VeritaSTG/ResourceEngineWrapper.hpp
     ${VERITA_SOURCE_DIR}/include/VeritaSTG/ResourcePool.hpp
-
-    # ${VERITA_SOURCE_DIR}/include/VeritaSTG/entrypoint.hpp
+    
+    ${VERITA_SOURCE_DIR}/include/VeritaSTG/log.hpp
+    ${VERITA_SOURCE_DIR}/include/VeritaSTG/engine_panic.hpp
 )
 
 set(VERITA_FRAMEWORK_SOURCE
@@ -34,6 +33,7 @@ set(VERITA_INCLUDE
     ${VERITA_FRAMEWORKS_DIR}/audio
 
     ${VERITA_FRAMEWORKS_DIR}/glad/include
+    ${VERITA_FRAMEWORKS_DIR}/Boxer/include
 
     ${Boost_INCLUDE_DIR}
     ${FMT_INCLUDE_DIR}
