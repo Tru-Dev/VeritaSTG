@@ -1,12 +1,12 @@
 /************************************************\
- * VeritaSTG: Log.hpp                           *
+ * VeritaSTG: log.hpp                           *
  * Implements logging, split between            *
  * standard output and file verita.log.         *
  *                                              *
  * Licensed under the MIT license.              *
 \************************************************/
 
-#include <VeritaSTG/Log.hpp>
+#include <VeritaSTG/log.hpp>
 
 #include <string>
 #include <fstream>
@@ -14,23 +14,21 @@
 
 #include <fmt/core.h>
 
-using namespace VeritaSTG;
+std::ofstream logFile("verita.log", std::ofstream::trunc);
 
-std::ofstream logFile("verita.log", std::ofstream::app | std::ofstream::trunc);
-
-void Log(LogLevel level, std::string str) {
+void VeritaSTG::Log(VeritaSTG::LogLevel level, std::string str) {
     std::string prefix;
     switch (level) {
-    case LogLevel::Error:
+    case VeritaSTG::LogLevel::Error:
         prefix = "[ERROR]";
         break;
-    case LogLevel::Warning:
+    case VeritaSTG::LogLevel::Warning:
         prefix = "[WARNING]";
         break;
-    case LogLevel::Info:
+    case VeritaSTG::LogLevel::Info:
         prefix = "[INFO]";
         break;
-    case LogLevel::Debug:
+    case VeritaSTG::LogLevel::Debug:
         prefix = "[DEBUG]";
         break;
     default:
@@ -42,3 +40,5 @@ void Log(LogLevel level, std::string str) {
     logFile << output.c_str() << '\n';
     std::cout << output.c_str() << '\n';
 }
+
+void VeritaSTG::CloseLogFile() { logFile.close(); }

@@ -1,5 +1,5 @@
 /************************************************\
- * VeritaSTG: Log.hpp                           *
+ * VeritaSTG: log.hpp                           *
  * Defines logging that is split between        *
  * standard output and file verita.log.         *
  *                                              *
@@ -23,4 +23,6 @@ namespace VeritaSTG {
     };
 
     void Log(LogLevel level, std::string str);
+
+    void CloseLogFile();
 }
