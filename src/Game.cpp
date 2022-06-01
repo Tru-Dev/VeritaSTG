@@ -11,9 +11,10 @@
 #include <fstream>
 #include <string>
 
-#include <miniaudio.h>
+#include <fmt/core.h>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+#include <miniaudio.h>
 
 #include <VeritaSTG/GlobalEventContext.hpp>
 #include <VeritaSTG/ResourceEngineWrapper.hpp>
