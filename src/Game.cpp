@@ -11,24 +11,26 @@
 #include <fstream>
 #include <string>
 
+#include <miniaudio.h>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 #include <VeritaSTG/GlobalEventContext.hpp>
 #include <VeritaSTG/ResourceEngineWrapper.hpp>
-#include <VeritaSTG/Log.hpp>
+#include <VeritaSTG/log.hpp>
 
-using namespace VeritaSTG;
-
-Game::~Game() {
-    if (state != InitState::Uninitialized && state != InitState::Destroyed)
+VeritaSTG::Game::~Game() {
+    if (state != VeritaSTG::InitState::Uninitialized && state != VeritaSTG::InitState::Destroyed)
         Cleanup();
 }
 
-int Game::Initialize(void) {
-    state = InitState::Initializing;
+int VeritaSTG::Game::Initialize(void) {
+    state = VeritaSTG::InitState::Initializing;
+
+    resEngines.Initialize();
+
     glfwSetErrorCallback([](int error, const char* description) {
-        Log(LogLevel::Error,
+        VeritaSTG::Log(VeritaSTG::LogLevel::Error,
             fmt::format("GLFW:\n{}\nError code: {:#010x}", description, error)
         );
     });
@@ -49,11 +51,11 @@ int Game::Initialize(void) {
     
     int version = gladLoadGL(glfwGetProcAddress);
     if (version == 0) {
-        Log(LogLevel::Error, "Failed to initialize OpenGL context.");
+        VeritaSTG::Log(VeritaSTG::LogLevel::Error, "Failed to initialize OpenGL context.");
         return -1;
     }
 
-    Log(LogLevel::Info, fmt::format(
+    VeritaSTG::Log(VeritaSTG::LogLevel::Info, fmt::format(
         "Loaded OpenGL version {}.{}",
         GLAD_VERSION_MAJOR(version),
         GLAD_VERSION_MINOR(version)
@@ -62,7 +64,7 @@ int Game::Initialize(void) {
     glfwSetWindowUserPointer(window, static_cast<void*>(this));
 
     cbReg.SetInitCallback(
-        [](GlobalEventContext<OnceData>* ctx){ ctx->LoadMusic("test_mus", "boss_EX.ogg"); }
+        [](GlobalEventContext<OnceData>* ctx){ ctx->LoadMusic("test_mus", "test.ogg"); }
     );
     cbReg.SetKeyCallback([](GlobalEventContext<KeyData>* ctx){
         auto k = ctx->GetEventData();
@@ -75,31 +77,31 @@ int Game::Initialize(void) {
         }
     });
 
-    state = InitState::Initialized;
+    state = VeritaSTG::InitState::Initialized;
     return 0;
 }
 
-void Game::Run(void) {
+void VeritaSTG::Game::Run(void) {
     // If the callback returns non-zero, there is no callback.
-    if (!cbReg.Init(GlobalEventContext<OnceData>(
+    if (cbReg.Init(GlobalEventContext<OnceData>(
         &(resEngines), &(resPool), // Resources
         {glfwGetTime()} // Event data
-    ))) Log(
-        LogLevel::Warning,
+    )) != 0) VeritaSTG::Log(
+        VeritaSTG::LogLevel::Warning,
         "The init event was raised, but there is no init callback registered!"
     );
 
-    state = InitState::Running;
+    state = VeritaSTG::InitState::Running;
 
     glfwSetKeyCallback(window,
     [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-        Game* self = static_cast<Game*>(glfwGetWindowUserPointer(window));
+        VeritaSTG::Game* self = static_cast<VeritaSTG::Game*>(glfwGetWindowUserPointer(window));
         // If the callback returns non-zero, there is no callback.
-        if (!self->cbReg.Key(GlobalEventContext<KeyData>(
+        if (self->cbReg.Key(GlobalEventContext<KeyData>(
             &(self->resEngines), &(self->resPool), // Resources
             {key, scancode, action, mods} // Event data
-        ))) Log(
-            LogLevel::Warning,
+        )) != 0) VeritaSTG::Log(
+            VeritaSTG::LogLevel::Warning,
             "A key event was raised, but there is no key callback registered!"
         );
     });
@@ -114,7 +116,9 @@ void Game::Run(void) {
     }
 }
 
-void Game::Cleanup(void) {
+void VeritaSTG::Game::Cleanup(void) {
     glfwTerminate();
-    state = InitState::Destroyed;
+    VeritaSTG::CloseLogFile();
+    resEngines.Uninitialize();
+    state = VeritaSTG::InitState::Destroyed;
 }
