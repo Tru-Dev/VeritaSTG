@@ -14,9 +14,7 @@
 // #include <Game.hpp>
 #include <VeritaSTG/Resource.hpp>
 
-using namespace VeritaSTG;
-
-unsigned int Fnv1Hash(std::string id) {
+unsigned int VeritaSTG::Fnv1Hash(std::string id) {
     unsigned int hash = FNV_OFFSET;
     for (unsigned char c : id) {
         hash *= FNV_PRIME;
@@ -25,11 +23,11 @@ unsigned int Fnv1Hash(std::string id) {
     return hash;
 }
 
-void ResourcePool::AddMusic(std::string id, std::string path) {
+void VeritaSTG::ResourcePool::AddMusic(std::string id, std::string path) {
     LazyResource<ma_sound> music(path);
-    MusicPool.emplace(Fnv1Hash(id), music);
+    MusicPool.emplace(VeritaSTG::Fnv1Hash(id), music);
 }
 
-LazyResource<ma_sound>* ResourcePool::FindMusic(std::string id) {
-    return &MusicPool[Fnv1Hash(id)];
+VeritaSTG::LazyResource<ma_sound>* VeritaSTG::ResourcePool::FindMusic(std::string id) {
+    return &MusicPool[VeritaSTG::Fnv1Hash(id)];
 }

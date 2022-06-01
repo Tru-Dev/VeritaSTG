@@ -21,11 +21,6 @@
 namespace VeritaSTG {
     unsigned int Fnv1Hash(std::string id);
 
-    // enum class ResourceType {
-    //     Music,
-    //     // More to come...
-    // };
-
     class ResourcePool {
         template <typename V>
         using TypePool = std::unordered_map<unsigned int, V>;
@@ -35,9 +30,6 @@ namespace VeritaSTG {
 
     public:
         void AddMusic(std::string id, std::string path);
-        // void AddResource(std::string id, ma_sound sound);
-
-        // void RemoveResource(std::string id, ResourceType resourceType);
 
         LazyResource<ma_sound>* FindMusic(std::string id);
     };
