@@ -1,14 +1,24 @@
 /************************************************\
  * VeritaSTG: win32/main.cpp                    *
- * Winodws entrypoint.                          *
+ * Windows entrypoint.                          *
  *                                              *
  * Licensed under the MIT license.              *
 \************************************************/
 
+#include <windows.h>
+#include <string.h>
 
 #include <VeritaSTG/Game.hpp>
 
-int main(void) {
+int main(int argc, char* argv[]) {
+    if (argc > 1 && _stricmp(argv[1], "-C") == 0 &&
+        (AttachConsole(ATTACH_PARENT_PROCESS) || AllocConsole())
+    ) {
+        freopen("CONIN$",  "r", stdin); 
+        freopen("CONOUT$", "w", stdout); 
+        freopen("CONOUT$", "w", stderr);
+    }
+
     VeritaSTG::Game game;
 
     int ret = game.Initialize();
